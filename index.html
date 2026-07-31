@@ -1,0 +1,1662 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GlintUI · 官网</title>
+    <link rel="icon" href="https://s41.ax1x.com/2026/07/30/pmhMNDA.jpg" type="image/jpeg" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #ffffff;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            color: #1a1a1a;
+            padding: 0;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+
+        body.dark {
+            background: #0a0a0a;
+            color: #f0f0f0;
+        }
+
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            display: block;
+            background: #ffffff;
+            transition: background 0.4s ease;
+        }
+
+        body.dark #bgCanvas {
+            background: #0a0a0a;
+        }
+
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.50);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            pointer-events: none;
+            transition: background 0.4s ease;
+        }
+
+        body.dark .bg-overlay {
+            background: rgba(0, 0, 0, 0.55);
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            padding: 0 40px;
+            height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            transition: background 0.4s ease, border-color 0.4s ease;
+        }
+
+        body.dark .navbar {
+            background: rgba(0, 0, 0, 0.08);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: #22c55e;
+            z-index: 101;
+            transition: none;
+            border-radius: 0;
+            box-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-toggle {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 6px 4px;
+            background: none;
+            border: none;
+            outline: none;
+            line-height: 1;
+            width: 44px;
+            height: 44px;
+            transition: none;
+            color: #1a1a1a;
+        }
+
+        body.dark .menu-toggle {
+            color: #f0f0f0;
+        }
+
+        .menu-toggle .menu-icon {
+            display: block;
+            line-height: 1;
+            transition: opacity 0.2s ease;
+        }
+
+        .menu-toggle .hamburger-icon {
+            font-size: 34px;
+            font-weight: 300;
+            color: #1a1a1a;
+        }
+
+        body.dark .menu-toggle .hamburger-icon {
+            color: #f0f0f0;
+        }
+
+        .menu-toggle .close-icon {
+            font-size: 28px;
+            font-weight: 300;
+            color: #1a1a1a;
+            display: none;
+        }
+
+        body.dark .menu-toggle .close-icon {
+            color: #f0f0f0;
+        }
+
+        .menu-toggle.active .hamburger-icon {
+            display: none;
+        }
+
+        .menu-toggle.active .close-icon {
+            display: block;
+        }
+
+        .navbar-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            transition: background 0.4s ease, border-color 0.4s ease;
+        }
+
+        body.dark .navbar-logo {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .navbar-brand {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: -0.3px;
+            transition: color 0.4s ease;
+        }
+
+        body.dark .navbar-brand {
+            color: #f0f0f0;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .navbar-right a {
+            color: rgba(0, 0, 0, 0.65);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.15s;
+            cursor: pointer;
+        }
+
+        body.dark .navbar-right a {
+            color: rgba(255, 255, 255, 0.65);
+        }
+
+        .navbar-right a:hover {
+            color: #1a1a1a;
+        }
+
+        body.dark .navbar-right a:hover {
+            color: #ffffff;
+        }
+
+        .navbar-right .nav-dl-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #22c55e;
+            color: #ffffff !important;
+            padding: 8px 20px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background 0.2s, transform 0.15s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar-right .nav-dl-btn:hover {
+            background: #16a34a;
+            transform: scale(1.02);
+            color: #ffffff !important;
+        }
+
+        .navbar-right .nav-dl-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+
+        /* 胶囊滑动开关 */
+        .theme-toggle-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-toggle-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(0, 0, 0, 0.5);
+            transition: color 0.4s ease;
+            user-select: none;
+        }
+
+        body.dark .theme-toggle-label {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .theme-switch {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            background: #ccc;
+            border-radius: 26px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            flex-shrink: 0;
+            border: none;
+            padding: 0;
+        }
+
+        .theme-switch.active {
+            background: #1a1a1a;
+        }
+
+        body.dark .theme-switch.active {
+            background: #22c55e;
+        }
+
+        .theme-switch .thumb {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background: #ffffff;
+            border-radius: 50%;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-switch.active .thumb {
+            transform: translateX(22px);
+        }
+
+        .mobile-menu {
+            display: block;
+            position: fixed;
+            top: 68px;
+            left: 0;
+            right: 0;
+            z-index: 99;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+            padding: 12px 0;
+            transform: translateY(-20px);
+            opacity: 0;
+            visibility: hidden;
+            transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                opacity 0.35s ease,
+                visibility 0.35s ease,
+                background 0.4s ease,
+                border-color 0.4s ease;
+            pointer-events: none;
+        }
+
+        body.dark .mobile-menu {
+            background: rgba(0, 0, 0, 0.08);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .mobile-menu.open {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .mobile-menu a {
+            color: rgba(0, 0, 0, 0.85);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 14px 40px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            transition: background 0.15s, color 0.4s ease, border-color 0.4s ease;
+            cursor: pointer;
+            display: block;
+        }
+
+        body.dark .mobile-menu a {
+            color: rgba(255, 255, 255, 0.85);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .mobile-menu a:last-child {
+            border-bottom: none;
+        }
+
+        .mobile-menu a:hover {
+            background: rgba(0, 0, 0, 0.04);
+        }
+
+        body.dark .mobile-menu a:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .mobile-menu .mobile-dl-btn {
+            background: #22c55e;
+            color: #ffffff !important;
+            border-radius: 0;
+            font-weight: 600;
+        }
+
+        .mobile-menu .mobile-dl-btn:hover {
+            background: #16a34a;
+        }
+
+        /* 移动端菜单内的主题切换 */
+        .mobile-theme-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 40px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            color: rgba(0, 0, 0, 0.85);
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.4s ease, border-color 0.4s ease;
+        }
+
+        body.dark .mobile-theme-row {
+            color: rgba(255, 255, 255, 0.85);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .mobile-theme-row .mobile-theme-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: #ccc;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            flex-shrink: 0;
+            border: none;
+            padding: 0;
+        }
+
+        .mobile-theme-row .mobile-theme-switch.active {
+            background: #1a1a1a;
+        }
+
+        body.dark .mobile-theme-row .mobile-theme-switch.active {
+            background: #22c55e;
+        }
+
+        .mobile-theme-row .mobile-theme-switch .thumb {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 18px;
+            height: 18px;
+            background: #ffffff;
+            border-radius: 50%;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .mobile-theme-row .mobile-theme-switch.active .thumb {
+            transform: translateX(20px);
+        }
+
+        .main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 40px 60px;
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+        }
+
+        .hero {
+            display: flex;
+            align-items: center;
+            gap: 56px;
+            flex-wrap: wrap;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .hero-left {
+            flex: 0 0 auto;
+            min-width: 150px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .hero-left .hero-img {
+            width: 100%;
+            max-width: 280px;
+            height: auto;
+            border-radius: 16px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+            transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        body.dark .hero-left .hero-img {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .hero-left .hero-img img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .hero-right {
+            flex: 1 1 340px;
+            min-width: 240px;
+            max-width: 500px;
+        }
+
+        .hero-right .title {
+            font-size: 40px;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: -0.5px;
+            margin-bottom: 12px;
+            transition: color 0.4s ease;
+        }
+
+        body.dark .hero-right .title {
+            color: #f0f0f0;
+        }
+
+        .hero-right .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .hero-right .tags .tag {
+            background: rgba(0, 0, 0, 0.05);
+            color: rgba(0, 0, 0, 0.7);
+            font-size: 14px;
+            font-weight: 500;
+            padding: 4px 18px;
+            border-radius: 40px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+        }
+
+        body.dark .hero-right .tags .tag {
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.7);
+            border-color: rgba(255, 255, 255, 0.06);
+        }
+
+        .hero-right .tags .tag.highlight {
+            background: rgba(34, 197, 94, 0.25);
+            color: #1a7a3a;
+            border-color: rgba(34, 197, 94, 0.2);
+        }
+
+        body.dark .hero-right .tags .tag.highlight {
+            background: rgba(34, 197, 94, 0.3);
+            color: #8cffb0;
+            border-color: rgba(34, 197, 94, 0.3);
+        }
+
+        .hero-right .date {
+            font-size: 15px;
+            color: rgba(0, 0, 0, 0.5);
+            margin-bottom: 14px;
+            transition: color 0.4s ease;
+        }
+
+        body.dark .hero-right .date {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .hero-right .date span {
+            color: rgba(0, 0, 0, 0.8);
+            font-weight: 500;
+            transition: color 0.4s ease;
+        }
+
+        body.dark .hero-right .date span {
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .hero-right .desc {
+            font-size: 16px;
+            line-height: 1.7;
+            color: rgba(0, 0, 0, 0.6);
+            margin-bottom: 24px;
+            max-width: 460px;
+            transition: color 0.4s ease;
+        }
+
+        body.dark .hero-right .desc {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .download-area {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 14px 20px;
+        }
+
+        .download-area .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #22c55e;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 16px;
+            padding: 12px 34px;
+            border-radius: 60px;
+            text-decoration: none;
+            transition: background 0.2s, transform 0.15s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
+
+        .download-area .btn:hover {
+            background: #16a34a;
+            transform: scale(1.02);
+        }
+
+        .download-area .pwd {
+            color: rgba(0, 0, 0, 0.4);
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.4s ease;
+        }
+
+        body.dark .download-area .pwd {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .download-area .pwd strong {
+            background: rgba(0, 0, 0, 0.04);
+            padding: 2px 14px;
+            border-radius: 40px;
+            font-weight: 700;
+            color: rgba(0, 0, 0, 0.7);
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+
+        body.dark .download-area .pwd strong {
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .page {
+            display: none;
+            width: 100%;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        .page.active .hero {
+            animation: slideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes slideUp {
+            0% {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-install .hero {
+            justify-content: center;
+            text-align: center;
+        }
+
+        .page-install .hero-right {
+            flex: 0 1 100%;
+            max-width: 800px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .install-steps {
+            margin-top: 8px;
+            padding: 0;
+            list-style: none;
+            counter-reset: step;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .install-steps li {
+            counter-increment: step;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            font-size: 15px;
+            line-height: 1.6;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            text-align: center;
+            color: rgba(0, 0, 0, 0.8);
+            transition: color 0.4s ease, border-color 0.4s ease;
+        }
+
+        body.dark .install-steps li {
+            color: rgba(255, 255, 255, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .install-steps li:last-child {
+            border-bottom: none;
+        }
+
+        .install-steps .step-header {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .install-steps .step-header::before {
+            content: counter(step);
+            background: rgba(0, 0, 0, 0.05);
+            color: rgba(0, 0, 0, 0.7);
+            font-weight: 700;
+            font-size: 14px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+        }
+
+        body.dark .install-steps .step-header::before {
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.7);
+            border-color: rgba(255, 255, 255, 0.06);
+        }
+
+        .install-steps .step-text strong {
+            color: #1a1a1a;
+            transition: color 0.4s ease;
+        }
+
+        body.dark .install-steps .step-text strong {
+            color: #f0f0f0;
+        }
+
+        .install-steps .step-text .code {
+            background: rgba(0, 0, 0, 0.04);
+            padding: 0 12px;
+            border-radius: 30px;
+            font-family: monospace;
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(0, 0, 0, 0.6);
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+
+        body.dark .install-steps .step-text .code {
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .install-steps .step-img {
+            margin-top: 6px;
+            margin-left: 0;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            border-radius: 8px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.02);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+            transition: border-color 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        body.dark .install-steps .step-img {
+            border-color: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.02);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .install-steps .step-img img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .install-steps .step-img-normal {
+            max-width: 400px;
+        }
+
+        .install-steps .step-img-small {
+            max-width: 200px;
+        }
+
+        .page-install .hero-left {
+            display: none;
+        }
+
+        .manual-tip {
+            font-size: 16px;
+            font-weight: 700;
+            color: rgba(0, 0, 0, 0.5);
+            margin-bottom: 8px;
+            width: 100%;
+            text-align: left;
+            transition: color 0.4s ease;
+        }
+
+        body.dark .manual-tip {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .download-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 14px 20px;
+        }
+
+        .download-group .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #22c55e;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 16px;
+            padding: 12px 34px;
+            border-radius: 60px;
+            text-decoration: none;
+            transition: background 0.2s, transform 0.15s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
+
+        .download-group .btn:hover {
+            background: #16a34a;
+            transform: scale(1.02);
+        }
+
+        .download-group .pwd {
+            color: rgba(0, 0, 0, 0.4);
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.4s ease;
+        }
+
+        body.dark .download-group .pwd {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .download-group .pwd strong {
+            background: rgba(0, 0, 0, 0.04);
+            padding: 2px 14px;
+            border-radius: 40px;
+            font-weight: 700;
+            color: rgba(0, 0, 0, 0.7);
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+
+        body.dark .download-group .pwd strong {
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* 谷歌风格长条加载动画 - 宽度自适应文字 */
+        .loading-dots {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            height: 4px;
+            width: 100%;
+            max-width: 380px;
+            margin-bottom: 20px;
+        }
+
+        .loading-dots .dot {
+            flex: 1;
+            height: 100%;
+            background: #22c55e;
+            border-radius: 4px;
+            animation: loadingDot 1.2s ease-in-out infinite;
+            opacity: 0.3;
+        }
+
+        .loading-dots .dot:nth-child(1) { animation-delay: 0s; }
+        .loading-dots .dot:nth-child(2) { animation-delay: 0.15s; }
+        .loading-dots .dot:nth-child(3) { animation-delay: 0.3s; }
+        .loading-dots .dot:nth-child(4) { animation-delay: 0.45s; }
+        .loading-dots .dot:nth-child(5) { animation-delay: 0.6s; }
+        .loading-dots .dot:nth-child(6) { animation-delay: 0.75s; }
+        .loading-dots .dot:nth-child(7) { animation-delay: 0.9s; }
+        .loading-dots .dot:nth-child(8) { animation-delay: 1.05s; }
+
+        @keyframes loadingDot {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scaleY(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scaleY(2.5);
+            }
+        }
+
+        .loading-text {
+            font-size: 40px;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: -0.5px;
+            transition: color 0.4s ease;
+        }
+
+        body.dark .loading-text {
+            color: #f0f0f0;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 20px;
+                height: 60px;
+            }
+
+            .menu-toggle {
+                display: flex;
+                order: 2;
+                margin-left: auto;
+            }
+
+            .navbar-right {
+                display: none;
+            }
+
+            .navbar-brand {
+                font-size: 19px;
+            }
+
+            .main {
+                padding: 80px 20px 40px;
+            }
+
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                gap: 32px;
+            }
+
+            .hero-left {
+                flex: 1 1 auto;
+                width: 100%;
+            }
+
+            .hero-left .hero-img {
+                max-width: 200px;
+                margin: 0 auto;
+            }
+
+            .hero-right {
+                max-width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .hero-right .tags {
+                justify-content: center;
+            }
+
+            .hero-right .desc {
+                max-width: 100%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .download-area {
+                justify-content: center;
+            }
+
+            .hero-right .title {
+                font-size: 32px;
+            }
+
+            .install-steps .step-img-normal {
+                max-width: 300px;
+            }
+
+            .install-steps .step-img-small {
+                max-width: 150px;
+            }
+
+            .install-steps .step-header {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .page-install .hero-left {
+                display: none;
+            }
+
+            .manual-tip {
+                text-align: center;
+            }
+
+            .download-group {
+                justify-content: center;
+            }
+
+            .mobile-menu {
+                top: 60px;
+            }
+
+            .loading-text {
+                font-size: 32px;
+            }
+
+            .loading-dots {
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 0 14px;
+                height: 54px;
+            }
+
+            .navbar-brand {
+                font-size: 17px;
+            }
+
+            .navbar-logo {
+                width: 30px;
+                height: 30px;
+            }
+
+            .menu-toggle .hamburger-icon {
+                font-size: 30px;
+            }
+
+            .menu-toggle .close-icon {
+                font-size: 24px;
+            }
+
+            .main {
+                padding: 72px 14px 32px;
+            }
+
+            .hero-left .hero-img {
+                max-width: 160px;
+            }
+
+            .hero-right .title {
+                font-size: 26px;
+            }
+
+            .download-area .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .install-steps .step-img-normal {
+                max-width: 200px;
+            }
+
+            .install-steps .step-img-small {
+                max-width: 120px;
+            }
+
+            .page-install .hero-left {
+                display: none;
+            }
+
+            .mobile-menu {
+                top: 54px;
+            }
+
+            .mobile-menu a {
+                padding: 12px 20px;
+                font-size: 15px;
+            }
+
+            .loading-text {
+                font-size: 26px;
+            }
+
+            .loading-dots {
+                max-width: 240px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-menu {
+                display: none !important;
+            }
+            .mobile-menu.open {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="bgCanvas"></canvas>
+    <div class="bg-overlay"></div>
+
+    <header class="navbar">
+        <div class="progress-bar" id="progressBar"></div>
+
+        <div class="navbar-left">
+            <div class="navbar-logo">
+                <img src="https://s41.ax1x.com/2026/07/30/pmhMNDA.jpg" alt="GlintUI" />
+            </div>
+            <span class="navbar-brand">GlintUI</span>
+        </div>
+
+        <button class="menu-toggle" id="menuToggle" aria-label="菜单">
+            <span class="menu-icon hamburger-icon">≡</span>
+            <span class="menu-icon close-icon">✕</span>
+        </button>
+
+        <div class="navbar-right">
+            <a onclick="navigateTo('home')">主页</a>
+            <a onclick="navigateTo('install')">安装方式</a>
+            <a href="https://pd.qq.com/s/389gzlj1u?b=5" target="_blank">官方频道</a>
+            <a onclick="navigateTo('download')" class="nav-dl-btn">
+                <svg viewBox="0 0 24 24" width="18" height="18"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                下载 ROM
+            </a>
+            <div class="theme-toggle-wrapper">
+                <span class="theme-toggle-label" id="themeLabel">浅色</span>
+                <button class="theme-switch" id="themeSwitch" aria-label="切换主题">
+                    <span class="thumb"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <a onclick="navigateTo('home'); closeMenu();">主页</a>
+        <a onclick="navigateTo('install'); closeMenu();">安装方式</a>
+        <a href="https://pd.qq.com/s/389gzlj1u?b=5" target="_blank" onclick="closeMenu();">官方频道</a>
+        <a onclick="navigateTo('download'); closeMenu();" class="mobile-dl-btn">下载 ROM</a>
+        <div class="mobile-theme-row">
+            <span>深浅模式</span>
+            <button class="mobile-theme-switch" id="mobileThemeSwitch" aria-label="切换主题">
+                <span class="thumb"></span>
+            </button>
+        </div>
+    </div>
+
+    <main class="main">
+
+        <div id="page-home" class="page active">
+            <div class="hero">
+                <div class="hero-left">
+                    <div class="hero-img">
+                        <img src="https://s41.ax1x.com/2026/07/30/pmhMj56.jpg" alt="GlintUI 展示" />
+                    </div>
+                </div>
+                <div class="hero-right">
+                    <div class="title">GlintUI</div>
+                    <div class="tags">
+                        <span class="tag highlight">beta 1.1</span>
+                        <span class="tag">仅支持虚拟大师 3.2.66</span>
+                    </div>
+                    <div class="date">
+                        发布时间：<span>2026 年 7 月 14 日</span>
+                    </div>
+                    <div class="desc">
+                        虚拟大师 Android 12 Pixel 类原生 ROM 包
+                    </div>
+                    <div class="download-area">
+                        <button onclick="navigateTo('download')" class="btn">
+                            ⬇ 下载 ROM
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-install" class="page page-install">
+            <div class="hero">
+                <div class="hero-right">
+                    <div class="title">安装方式</div>
+                    <div style="margin: 16px 0 20px 0; width: 100%; display: flex; flex-direction: column; align-items: center;">
+                        <ol class="install-steps">
+                            <li>
+                                <div class="step-header">
+                                    <span class="step-text">安装 <strong>虚拟大师 3.2.66</strong> <span class="code">其他版本无效</span></span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="step-header">
+                                    <span class="step-text">打开虚拟大师，右上角 <strong>「三个点」</strong> 菜单</span>
+                                </div>
+                                <div class="step-img step-img-normal">
+                                    <img src="https://s41.ax1x.com/2026/07/30/pmhlqtx.jpg" alt="步骤2示意图" loading="lazy" />
+                                </div>
+                            </li>
+                            <li>
+                                <div class="step-header">
+                                    <span class="step-text">进入 <strong>「备份与恢复」</strong>，点击文件夹图标 <span style="background:rgba(0,0,0,0.04); padding:0 8px; border-radius:30px;">📂</span> 导入 ROM</span>
+                                </div>
+                                <div class="step-img step-img-normal">
+                                    <img src="https://s41.ax1x.com/2026/07/30/pmhlbA1.jpg" alt="步骤3示意图" loading="lazy" />
+                                </div>
+                            </li>
+                            <li>
+                                <div class="step-header">
+                                    <span class="step-text">选择下载的 <strong>GlintUI_beta1.1</strong>，导入后点击 <strong>「恢复」</strong></span>
+                                </div>
+                                <div class="step-img step-img-normal">
+                                    <img src="https://s41.ax1x.com/2026/07/30/pmhlX9K.jpg" alt="步骤4示意图" loading="lazy" />
+                                </div>
+                            </li>
+                            <li>
+                                <div class="step-header">
+                                    <span class="step-text">重启虚拟大师，完成</span>
+                                </div>
+                                <div class="step-img step-img-small">
+                                    <img src="https://s41.ax1x.com/2026/07/30/pmhlLh6.jpg" alt="步骤5示意图" loading="lazy" />
+                                </div>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-download" class="page">
+            <div class="hero">
+                <div class="hero-left">
+                    <div class="hero-img">
+                        <img src="https://s41.ax1x.com/2026/07/30/pmhMj56.jpg" alt="GlintUI 展示" />
+                    </div>
+                </div>
+                <div class="hero-right">
+                    <div id="loadingState" style="display: flex; flex-direction: column; align-items: flex-start; width: 100%;">
+                        <div class="loading-dots">
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </div>
+                        <div class="loading-text">很快会开始下载…</div>
+                    </div>
+                    <div id="thanksState" style="display: none; flex-direction: column; width: 100%;">
+                        <div class="title">感谢下载 GlintUI</div>
+                        <div class="tags">
+                            <span class="tag highlight">beta 1.1</span>
+                        </div>
+                        <div class="date">
+                            发布时间：<span>2026 年 7 月 14 日</span>
+                        </div>
+                        <div class="manual-tip" id="manualTip" style="display: none;">
+                            未自动跳转？点击按钮手动下载
+                        </div>
+                        <div class="download-group" id="downloadGroup" style="display: none;">
+                            <a href="https://pan.baidu.com/s/12U40VyGPwgDQfcdLOobTRA?pwd=4q35" target="_blank" rel="noopener noreferrer" class="btn">
+                                百度网盘链接
+                            </a>
+                            <span class="pwd">提取码 <strong>4q35</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // ========== 粒子背景脚本 ==========
+        (function() {
+            const canvas = document.getElementById('bgCanvas');
+            const ctx = canvas.getContext('2d');
+
+            let width, height;
+            function resizeCanvas() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+            }
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                if (particles.length > 0) {
+                    const oldCount = particles.length;
+                    const newCount = Math.floor((width * height) / 15000);
+                    if (newCount !== oldCount) {
+                        particles = [];
+                        for (let i = 0; i < newCount; i++) {
+                            particles.push(createParticle());
+                        }
+                    } else {
+                        particles.forEach(p => {
+                            p.x = Math.random() * width;
+                            p.y = Math.random() * height;
+                        });
+                    }
+                }
+            });
+
+            function randomGreen() {
+                const hue = 90 + Math.random() * 60;
+                const sat = 50 + Math.random() * 50;
+                const lig = 25 + Math.random() * 60;
+                return `hsl(${hue}, ${sat}%, ${lig}%)`;
+            }
+
+            function createParticle() {
+                const baseRadius = 8 + Math.random() * 20;
+                const angle = Math.random() * 2 * Math.PI;
+                const speed = 0.25 + Math.random() * 0.7;
+                return {
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    baseRadius: baseRadius,
+                    phase: Math.random() * 2 * Math.PI,
+                    speed: 0.006 + Math.random() * 0.022,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    color: randomGreen(),
+                    offset: Math.random() * 100,
+                };
+            }
+
+            let particles = [];
+            function initParticles(count) {
+                particles = [];
+                for (let i = 0; i < count; i++) {
+                    particles.push(createParticle());
+                }
+            }
+
+            const density = 15000;
+            function getParticleCount() {
+                return Math.floor((width * height) / density);
+            }
+
+            let time = 0;
+            function animate() {
+                time++;
+                ctx.clearRect(0, 0, width, height);
+
+                for (let p of particles) {
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    if (p.x < 0) { p.x = 0; p.vx *= -0.9; }
+                    if (p.x > width) { p.x = width; p.vx *= -0.9; }
+                    if (p.y < 0) { p.y = 0; p.vy *= -0.9; }
+                    if (p.y > height) { p.y = height; p.vy *= -0.9; }
+
+                    if (Math.random() < 0.008) {
+                        p.vx += (Math.random() - 0.5) * 0.15;
+                        p.vy += (Math.random() - 0.5) * 0.15;
+                        const maxSpeed = 1.6;
+                        const sp = Math.hypot(p.vx, p.vy);
+                        if (sp > maxSpeed) {
+                            p.vx = (p.vx / sp) * maxSpeed;
+                            p.vy = (p.vy / sp) * maxSpeed;
+                        }
+                    }
+
+                    const scaleFactor = 0.5 + 0.5 * Math.sin(time * p.speed + p.phase);
+                    const radius = p.baseRadius * (0.3 + 1.9 * scaleFactor);
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                    ctx.shadowColor = 'rgba(0, 60, 0, 0.15)';
+                    ctx.shadowBlur = 12;
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                }
+
+                requestAnimationFrame(animate);
+            }
+
+            function setup() {
+                resizeCanvas();
+                const count = getParticleCount();
+                initParticles(count);
+                animate();
+            }
+
+            setup();
+
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    resizeCanvas();
+                    const newCount = getParticleCount();
+                    if (particles.length !== newCount) {
+                        particles = [];
+                        for (let i = 0; i < newCount; i++) {
+                            particles.push(createParticle());
+                        }
+                    } else {
+                        particles.forEach(p => {
+                            p.x = Math.random() * width;
+                            p.y = Math.random() * height;
+                        });
+                    }
+                }, 200);
+            });
+        })();
+
+        // ========== 胶囊开关 (桌面端) ==========
+        const themeSwitch = document.getElementById('themeSwitch');
+        const themeLabel = document.getElementById('themeLabel');
+
+        themeSwitch.addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.body.classList.toggle('dark');
+            // 同步移动端开关
+            const mobileSwitch = document.getElementById('mobileThemeSwitch');
+            if (document.body.classList.contains('dark')) {
+                themeLabel.textContent = '深色';
+                mobileSwitch.classList.add('active');
+            } else {
+                themeLabel.textContent = '浅色';
+                mobileSwitch.classList.remove('active');
+            }
+        });
+
+        // ========== 胶囊开关 (移动端) ==========
+        const mobileThemeSwitch = document.getElementById('mobileThemeSwitch');
+
+        mobileThemeSwitch.addEventListener('click', function(e) {
+            e.stopPropagation();
+            this.classList.toggle('active');
+            document.body.classList.toggle('dark');
+            // 同步桌面端开关
+            const desktopSwitch = document.getElementById('themeSwitch');
+            if (document.body.classList.contains('dark')) {
+                themeLabel.textContent = '深色';
+                desktopSwitch.classList.add('active');
+            } else {
+                themeLabel.textContent = '浅色';
+                desktopSwitch.classList.remove('active');
+            }
+        });
+
+        // ========== 导航逻辑 ==========
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        menuToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            this.classList.toggle('active');
+            mobileMenu.classList.toggle('open');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!menuToggle.contains(e.target) && !mobileMenu.contains(e.target)) {
+                menuToggle.classList.remove('active');
+                mobileMenu.classList.remove('open');
+            }
+        });
+
+        function closeMenu() {
+            menuToggle.classList.remove('active');
+            mobileMenu.classList.remove('open');
+        }
+
+        let progressTimer = null;
+        let progressBar = document.getElementById('progressBar');
+
+        function startProgress() {
+            return new Promise((resolve) => {
+                progressBar.style.width = '0%';
+                progressBar.style.transition = 'none';
+                void progressBar.offsetWidth;
+
+                const totalDuration = 2000;
+                const startTime = Date.now();
+
+                const segments = [];
+                const count = 4 + Math.floor(Math.random() * 4);
+                let accumulated = 0;
+
+                for (let i = 0; i < count; i++) {
+                    let ratio;
+                    if (i === count - 1) {
+                        ratio = 1 - accumulated;
+                    } else {
+                        ratio = 0.1 + Math.random() * 0.35;
+                        if (accumulated + ratio > 0.95) {
+                            ratio = 0.95 - accumulated;
+                        }
+                    }
+                    let progressGain;
+                    if (i === count - 1) {
+                        progressGain = 100 - accumulated * 100;
+                    } else {
+                        progressGain = 5 + Math.random() * 30;
+                        const remaining = 100 - accumulated * 100;
+                        if (progressGain > remaining - 2) {
+                            progressGain = Math.max(2, remaining - 2);
+                        }
+                    }
+                    segments.push({ timeRatio: ratio, progressGain: progressGain });
+                    accumulated += ratio;
+                }
+
+                let totalProgress = 0;
+                let finished = false;
+
+                function updateProgress() {
+                    const now = Date.now();
+                    const elapsed = now - startTime;
+                    const progress = Math.min(elapsed / totalDuration, 1);
+
+                    let targetProgress = 0;
+                    let accumulatedTime = 0;
+                    for (let i = 0; i < segments.length; i++) {
+                        const seg = segments[i];
+                        const segDuration = seg.timeRatio * totalDuration;
+                        if (progress <= (accumulatedTime + segDuration) / totalDuration) {
+                            const segProgress = (progress * totalDuration - accumulatedTime) / segDuration;
+                            targetProgress = (totalProgress + seg.progressGain * segProgress) / 100;
+                            break;
+                        }
+                        accumulatedTime += segDuration;
+                        totalProgress += seg.progressGain;
+                        if (i === segments.length - 1) {
+                            targetProgress = 1;
+                        }
+                    }
+
+                    if (progress >= 1) {
+                        targetProgress = 1;
+                    }
+
+                    const width = Math.min(targetProgress * 100, 100);
+                    progressBar.style.transition = 'none';
+                    progressBar.style.width = width + '%';
+
+                    if (progress < 1) {
+                        requestAnimationFrame(updateProgress);
+                    } else {
+                        progressBar.style.transition = 'none';
+                        progressBar.style.width = '100%';
+                        finished = true;
+                        resolve();
+                    }
+                }
+
+                requestAnimationFrame(updateProgress);
+
+                clearTimeout(progressTimer);
+                progressTimer = setTimeout(function() {
+                    progressBar.style.transition = 'none';
+                    progressBar.style.width = '100%';
+                    if (!finished) {
+                        finished = true;
+                        resolve();
+                    }
+                    setTimeout(() => {
+                        progressBar.style.width = '0%';
+                    }, 100);
+                }, totalDuration + 50);
+            });
+        }
+
+        let isNavigating = false;
+        let downloadPageTimer = null;
+
+        function navigateTo(page) {
+            if (isNavigating) return;
+            isNavigating = true;
+
+            startProgress().then(() => {
+                document.querySelectorAll('.page').forEach(el => {
+                    el.classList.remove('active');
+                    el.style.display = 'none';
+                });
+                const target = document.getElementById('page-' + page);
+                if (target) {
+                    target.style.display = 'flex';
+                    target.classList.add('active');
+                }
+
+                if (page === 'download') {
+                    startDownloadSequence();
+                }
+
+                setTimeout(() => {
+                    progressBar.style.width = '0%';
+                }, 150);
+
+                isNavigating = false;
+            });
+        }
+
+        // ========== 下载页面流程 ==========
+        function startDownloadSequence() {
+            const loadingState = document.getElementById('loadingState');
+            const thanksState = document.getElementById('thanksState');
+            const manualTip = document.getElementById('manualTip');
+            const downloadGroup = document.getElementById('downloadGroup');
+
+            loadingState.style.display = 'flex';
+            thanksState.style.display = 'none';
+            manualTip.style.display = 'none';
+            downloadGroup.style.display = 'none';
+
+            if (downloadPageTimer) {
+                clearTimeout(downloadPageTimer);
+                downloadPageTimer = null;
+            }
+
+            // 等导航栏进度条跑完 (2秒) 后再切换
+            startProgress().then(() => {
+                loadingState.style.display = 'none';
+                thanksState.style.display = 'flex';
+
+                // 再等3秒显示下载按钮并跳转
+                setTimeout(function() {
+                    downloadGroup.style.display = 'flex';
+                    manualTip.style.display = 'block';
+                    window.open('https://pan.baidu.com/s/12U40VyGPwgDQfcdLOobTRA?pwd=4q35', '_blank');
+                    setTimeout(() => {
+                        progressBar.style.width = '0%';
+                    }, 150);
+                }, 3000);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.page').forEach(el => {
+                el.classList.remove('active');
+                el.style.display = 'none';
+            });
+            const home = document.getElementById('page-home');
+            if (home) {
+                home.style.display = 'flex';
+                home.classList.add('active');
+            }
+            progressBar.style.width = '0%';
+        });
+    </script>
+
+</body>
+</html>
