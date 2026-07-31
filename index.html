@@ -255,7 +255,6 @@
             flex-shrink: 0;
         }
 
-        /* 胶囊滑动开关 */
         .theme-toggle-wrapper {
             display: flex;
             align-items: center;
@@ -388,7 +387,6 @@
             background: #16a34a;
         }
 
-        /* 移动端菜单内的主题切换 */
         .mobile-theme-row {
             display: flex;
             align-items: center;
@@ -619,29 +617,11 @@
             transform: scale(1.02);
         }
 
-        .download-area .pwd {
-            color: rgba(0, 0, 0, 0.4);
-            font-size: 14px;
-            font-weight: 500;
-            transition: color 0.4s ease;
-        }
-
-        body.dark .download-area .pwd {
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        .download-area .pwd strong {
-            background: rgba(0, 0, 0, 0.04);
-            padding: 2px 14px;
-            border-radius: 40px;
-            font-weight: 700;
-            color: rgba(0, 0, 0, 0.7);
-            transition: background 0.4s ease, color 0.4s ease;
-        }
-
-        body.dark .download-area .pwd strong {
-            background: rgba(255, 255, 255, 0.06);
-            color: rgba(255, 255, 255, 0.7);
+        .download-area .btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+            flex-shrink: 0;
         }
 
         .page {
@@ -848,32 +828,13 @@
             transform: scale(1.02);
         }
 
-        .download-group .pwd {
-            color: rgba(0, 0, 0, 0.4);
-            font-size: 14px;
-            font-weight: 500;
-            transition: color 0.4s ease;
+        .download-group .btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+            flex-shrink: 0;
         }
 
-        body.dark .download-group .pwd {
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        .download-group .pwd strong {
-            background: rgba(0, 0, 0, 0.04);
-            padding: 2px 14px;
-            border-radius: 40px;
-            font-weight: 700;
-            color: rgba(0, 0, 0, 0.7);
-            transition: background 0.4s ease, color 0.4s ease;
-        }
-
-        body.dark .download-group .pwd strong {
-            background: rgba(255, 255, 255, 0.06);
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        /* 谷歌风格长条加载动画 - 宽度自适应文字 */
         .loading-dots {
             display: flex;
             align-items: center;
@@ -1181,7 +1142,8 @@
                     </div>
                     <div class="download-area">
                         <button onclick="navigateTo('download')" class="btn">
-                            ⬇ 下载 ROM
+                            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                            下载 ROM
                         </button>
                     </div>
                 </div>
@@ -1267,13 +1229,13 @@
                             发布时间：<span>2026 年 7 月 14 日</span>
                         </div>
                         <div class="manual-tip" id="manualTip" style="display: none;">
-                            未自动跳转？点击按钮手动下载
+                            未自动下载？点击按钮手动下载
                         </div>
                         <div class="download-group" id="downloadGroup" style="display: none;">
-                            <a href="https://pan.baidu.com/s/12U40VyGPwgDQfcdLOobTRA?pwd=4q35" target="_blank" rel="noopener noreferrer" class="btn">
-                                百度网盘链接
+                            <a href="https://github.com/Glint-UI/home/releases/download/%E8%99%9A%E6%8B%9F%E5%A4%A7%E5%B8%883.2.66%E7%89%88/GlintUI.beta-1.1_2026-07-13_1785111633665.zip" target="_blank" rel="noopener noreferrer" class="btn">
+                                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                                下载 ROM
                             </a>
-                            <span class="pwd">提取码 <strong>4q35</strong></span>
                         </div>
                     </div>
                 </div>
@@ -1283,7 +1245,6 @@
     </main>
 
     <script>
-        // ========== 粒子背景脚本 ==========
         (function() {
             const canvas = document.getElementById('bgCanvas');
             const ctx = canvas.getContext('2d');
@@ -1422,14 +1383,12 @@
             });
         })();
 
-        // ========== 胶囊开关 (桌面端) ==========
         const themeSwitch = document.getElementById('themeSwitch');
         const themeLabel = document.getElementById('themeLabel');
 
         themeSwitch.addEventListener('click', function() {
             this.classList.toggle('active');
             document.body.classList.toggle('dark');
-            // 同步移动端开关
             const mobileSwitch = document.getElementById('mobileThemeSwitch');
             if (document.body.classList.contains('dark')) {
                 themeLabel.textContent = '深色';
@@ -1440,14 +1399,12 @@
             }
         });
 
-        // ========== 胶囊开关 (移动端) ==========
         const mobileThemeSwitch = document.getElementById('mobileThemeSwitch');
 
         mobileThemeSwitch.addEventListener('click', function(e) {
             e.stopPropagation();
             this.classList.toggle('active');
             document.body.classList.toggle('dark');
-            // 同步桌面端开关
             const desktopSwitch = document.getElementById('themeSwitch');
             if (document.body.classList.contains('dark')) {
                 themeLabel.textContent = '深色';
@@ -1458,7 +1415,6 @@
             }
         });
 
-        // ========== 导航逻辑 ==========
         const menuToggle = document.getElementById('menuToggle');
         const mobileMenu = document.getElementById('mobileMenu');
 
@@ -1610,7 +1566,6 @@
             });
         }
 
-        // ========== 下载页面流程 ==========
         function startDownloadSequence() {
             const loadingState = document.getElementById('loadingState');
             const thanksState = document.getElementById('thanksState');
@@ -1627,16 +1582,14 @@
                 downloadPageTimer = null;
             }
 
-            // 等导航栏进度条跑完 (2秒) 后再切换
             startProgress().then(() => {
                 loadingState.style.display = 'none';
                 thanksState.style.display = 'flex';
 
-                // 再等3秒显示下载按钮并跳转
                 setTimeout(function() {
                     downloadGroup.style.display = 'flex';
                     manualTip.style.display = 'block';
-                    window.open('https://pan.baidu.com/s/12U40VyGPwgDQfcdLOobTRA?pwd=4q35', '_blank');
+                    window.open('https://github.com/Glint-UI/home/releases/download/%E8%99%9A%E6%8B%9F%E5%A4%A7%E5%B8%883.2.66%E7%89%88/GlintUI.beta-1.1_2026-07-13_1785111633665.zip', '_blank');
                     setTimeout(() => {
                         progressBar.style.width = '0%';
                     }, 150);
